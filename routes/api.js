@@ -7,7 +7,19 @@ module.exports = function (app) {
     .route("/api/issues/:project")
 
     .get(async function (req, res) {
-      let project = req.params.project;
+      try {
+        let project = req.params.project;
+        if (!project) {
+          return res.json([]);
+        }
+        const Issue = mongoose.model("project", userSchema);
+
+        const issue = await Issue.find({});
+        res.json(issue || []);
+      } catch (error) {
+        console.log("error", error);
+        res.json({ error });
+      }
     })
 
     .post(async function (req, res) {
