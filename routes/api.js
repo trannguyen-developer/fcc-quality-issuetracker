@@ -61,7 +61,23 @@ module.exports = function (app) {
       }
     })
 
-    .delete(function (req, res) {
-      let project = req.params.project;
+    .delete(async function (req, res) {
+      try {
+        let project = req.params.project;
+        const idIssue = req.body._id;
+
+        const Issue = mongoose.model(project, userSchema);
+
+        const deleteIssue = await Issue.findByIdAndDelete(idIssue);
+
+        if (deleteIssue) {
+          res.json({ message: "Issue was deleted successfully" });
+        } else {
+          res.json({ message: "Issue not found ID" });
+        }
+      } catch (error) {
+        console.log("error", error);
+        res.json({ error });
+      }
     });
 };
