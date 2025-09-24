@@ -8,13 +8,17 @@ module.exports = function (app) {
 
     .get(async function (req, res) {
       try {
+        const query = req.query;
+
+        console.log("query", query);
+
         let project = req.params.project;
         if (!project) {
           return res.json([]);
         }
         const Issue = mongoose.model(project, userSchema);
 
-        const issue = await Issue.find({});
+        const issue = await Issue.find(query);
         res.json(issue || []);
       } catch (error) {
         console.log("error", error);
@@ -28,11 +32,20 @@ module.exports = function (app) {
         if (!project) {
           return res.json({ error: "wrong project" });
         }
+
+        const { issue_title, issue_text, created_by } = req.body;
+
+        if (!issue_title || !issue_text || !created_by) {
+          return res.json({
+            error: "required field(s) missing",
+          });
+        }
+
         const Issue = mongoose.model(project, userSchema);
 
         const issue = new Issue(req.body);
         await issue.save();
-        res.json({ data: issue });
+        res.json(issue);
       } catch (error) {
         console.log("error", error);
         res.json({ error });

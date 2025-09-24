@@ -10,13 +10,15 @@ const issueSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    created_by: String,
-    assigned_to: String,
+    created_by: { type: String, required: true },
+    assigned_to: { type: String, default: "" },
+    status_text: { type: String, default: "" },
     open: { type: Boolean, default: true },
-    status_text: String,
-    created_on: { type: Date, default: Date.now() },
   },
-  { timestamps: { createdAt: "created_on", updatedAt: "updated_on" } }
+  {
+    timestamps: { createdAt: "created_on", updatedAt: "updated_on" },
+    versionKey: false,
+  }
 );
 
 // const User = mongoose.model('User', userSchema);
