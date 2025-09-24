@@ -91,10 +91,14 @@ module.exports = function (app) {
 
         const deleteIssue = await Issue.findByIdAndDelete(idIssue);
 
+        if (!idIssue) {
+          return res.json({ error: "missing _id" });
+        }
+
         if (deleteIssue) {
-          res.json({ message: "Issue was deleted successfully" });
+          res.json({ result: "successfully deleted", _id: idIssue });
         } else {
-          res.json({ message: "Issue not found ID" });
+          res.json({ error: "could not delete", _id: idIssue });
         }
       } catch (error) {
         console.log("error", error);
