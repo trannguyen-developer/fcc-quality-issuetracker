@@ -63,10 +63,18 @@ module.exports = function (app) {
         const updatedIssue = await Issue.findByIdAndUpdate(_id, rest, {
           new: true,
         });
+        if (!_id) {
+          return res.json({ error: "missing _id" });
+        }
+
+        if (Object.keys(rest).length === 0) {
+          return res.json({ error: "no update field(s) sent", _id });
+        }
+
         if (updatedIssue) {
-          res.json({ data: updatedIssue });
+          res.json({ result: "successfully updated", _id });
         } else {
-          res.json({ error: `Issue of ${project} project not found` });
+          res.json({ error: "could not update", _id });
         }
       } catch (error) {
         console.log("error", error);
